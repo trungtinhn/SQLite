@@ -31,31 +31,37 @@ const ClassData = [
     name: 'class04',
     number: '5'
   },
+  {
+    id: 'class05',
+    name: 'class05',
+    number: '5'
+  },
 ]
-export default function Classes() {
+export default function Classes({navigation}) {
   const [update, setupdate] = useState(0)
   const data = new Array();
-  const onPress = ()=>{
-      setData()
-      getData()
-  }
+  useEffect(() =>{
+       
+    setData()
+    getData()
+   
+  }, [ClassData])
   const setData = async () =>{
     await db.transaction(async (tx)=> {
       await tx.executeSql(
-        // 'INSERT INTO Class (IDClass, NameClass, Student) VALUES'+
-        // ClassData.map(
-        //   i => '('${i.id}','${i.name}','${i.number}')',
-        // ).join(',')
-        `INSERT INTO Class(IDClass, NameClass, Student) values` + 
-        ClassData.map( i =>`('${i.id}', '${i.name}', '${i.number}')`, 
-        ).join(',')
+        `INSERT INTO Class (IDClass, NameClass, Student) values` + 
+        ClassData.map( i =>`(${i.id}, '${i.name}', '${i.number}')`
+        ).join(','),
+        (tx, results) => {
+          console.log('Results', results.rowsAffected)
+        }
       )
     })
   }
   const getData = () => {
     db.transaction((tx) =>{
       tx.executeSql(
-          "SELECT IDClass, NameClass, Student FROM Classes",
+          "SELECT IDClass, NameClass, Student FROM Class",
           [],
           (tx, res) =>{
             const len = res.rows.length
@@ -85,29 +91,38 @@ export default function Classes() {
   return (
     <SafeAreaView>
     <View style = {{alignItems: 'center'}}>
-      <TouchableOpacity onPress = {onPress}>
+      <TouchableOpacity onPress = {()=>{}}>
       <Text style = {{fontWeight: 'bold', fontSize: 30}}>Classes</Text>
       </TouchableOpacity>
     </View>
-    <View style = {{width: '100%', height: 200, backgroundColor: '#C0C0C0'}}>
+    <View style = {{width: '100%', height: 600, alignItems: 'center'}}>
           <FlatList
-              data={ClassData}
-              renderItem={({item}) => 
-              <classes
-              onPress={() => 
-                {
-
-                  const IdClass = item.id
-                  const NameClass = item.name
-                  const StudentClass = item.students
-                  navigation.navigate('Details', {IdClass, NameClass, StudentClass})
-
-                }}
-              id = {item.id}
-              class = {item.name}
-              soluong = {item.number}
-              >
-              </classes>
+              data={data}
+              renderItem={({item}) => (
+                <View>
+                <TouchableOpacity 
+                    onPress={() => 
+                      {
+      
+                        const IdClass = item.Id
+                        const NameClass = item.Name
+                        const StudentClass = item.Students
+                        navigation.navigate('Details', {IdClass, NameClass, StudentClass})
+      
+                      }}
+                    style = {styles.product}>
+                    <View style = {{marginTop: 5, marginLeft: 4}}>
+                    <Text>ID: {item.Id}</Text>
+                    </View>
+                    <View style = {{marginLeft: 4, marginTop:5}}>
+                      <Text>Name: {item.Name}</Text>
+                    </View>
+                    <View style = {{marginLeft: 4, marginTop:5}}>
+                      <Text>Students: {item.Students}</Text>
+                    </View>
+                </TouchableOpacity>
+                </View>
+              )
             }
     />
     </View>
@@ -115,4 +130,14 @@ export default function Classes() {
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  product:{
+    borderRadius: 5,
+    borderWidth: 1,
+    width: 250,
+    height: 80,
+    flexDirection: 'column',
+    marginTop: 10,
+    marginLeft: 10
+  }
+})

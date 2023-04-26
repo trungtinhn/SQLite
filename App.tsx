@@ -31,7 +31,7 @@ export default function App() {
       name="Classes" 
       component={Classes}/> 
       <Stack.Screen 
-      name="Classes Details" 
+      name="Details" 
       component={Details}/> 
   </Stack.Navigator> 
  </NavigationContainer>

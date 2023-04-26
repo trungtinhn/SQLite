@@ -45,7 +45,7 @@ export default function Register({navigation}) {
            tx.executeSql(
             "CREATE TABLE IF NOT EXISTS "
             +"Student "
-            +"(IDStudent TEXT PRIMARY KEY,Name TEXT NOT NULL, Dob TEXT NOT NULL, IDClass )"
+            +"(IDStudent TEXT PRIMARY KEY,Avatar TEXT NOT NULL, Name TEXT NOT NULL, Dob TEXT NOT NULL, IDClass TEXT NOT NULL)"
            )
         })
       }
